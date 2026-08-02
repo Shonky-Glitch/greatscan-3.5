@@ -14,6 +14,7 @@
 #endif
 
 #include "project_config.h"
+#include "test_pages/telemetry_test_page.h"
 
 namespace {
 // Flat automotive-diagnostic theme constants. Status/chrome colors are
@@ -86,7 +87,10 @@ constexpr float kMaxEg3C = 900.0f;
 constexpr float kMaxO2s1V = 1.275f;
 constexpr uint8_t kFt6336TouchCountReg = 0x02;
 constexpr uint8_t kFt6336P1XhReg = 0x03;
-constexpr uint8_t kUiPageCount = 6;
+// One extra page slot beyond the gauge dashboard pages: a static
+// "Telemetry Test Codes" reference page (see test_pages/telemetry_test_page.h).
+constexpr uint8_t kUiPageCount = 7;
+constexpr uint8_t kTelemetryTestPageIndex = kUiPageCount - 1;
 constexpr int kSwipeMinDistancePx = 70;
 constexpr int kSwipeAxisBiasPx = 20;
 constexpr unsigned long kTouchActionDebounceMs = 220;
@@ -539,6 +543,17 @@ void drawTextAt(int x, int y, const char* text, uint16_t fg, uint16_t bg, uint8_
   printText(text);
 }
 
+greatscan::testpages::DrawSurface buildTestPageSurface() {
+  greatscan::testpages::DrawSurface surface;
+  surface.width = panelWidth();
+  surface.height = panelHeight();
+  surface.fillScreen = fillScreen;
+  surface.fillRect = fillRect;
+  surface.drawRect = drawRect;
+  surface.drawTextAt = drawTextAt;
+  return surface;
+}
+
 constexpr unsigned long kSplashDurationMs = 5000;
 
 void drawSplashScreen() {
@@ -649,6 +664,17 @@ void drawVehicleBadge(bool force) {
 }
 
 void drawDashboardFrame() {
+  if (currentPageIndicatorIndex == kTelemetryTestPageIndex) {
+    dashboardFrameWidth = panelWidth();
+    dashboardFrameHeight = panelHeight();
+    dashboardFrameDrawn = true;
+    dashboardFramePageIndex = currentPageIndicatorIndex;
+    renderedLeftValue = -1000.0f;
+    renderedRightValue = -1000.0f;
+    greatscan::testpages::drawTelemetryCodesPage(buildTestPageSurface(), true);
+    return;
+  }
+
   const int w = panelWidth();
   const int h = panelHeight();
   const PageConfig page = activePageConfig();
@@ -715,6 +741,14 @@ void drawDashboardFrame() {
 }
 
 void renderDashboardValues(bool force) {
+  if (currentPageIndicatorIndex == kTelemetryTestPageIndex) {
+    if (!dashboardFrameDrawn) {
+      drawDashboardFrame();
+    }
+    greatscan::testpages::drawTelemetryCodesPage(buildTestPageSurface(), force);
+    return;
+  }
+
   const int w = panelWidth();
   const int h = panelHeight();
   if (!dashboardFrameDrawn || dashboardFrameWidth != w || dashboardFrameHeight != h) {
@@ -1004,22 +1038,24 @@ void DisplayUi::pollTouch() {
       };
 
       const uint8_t page = pageIndex_ % kUiPageCount;
-      if (insideAt(leftCardButton, touchStartPoint_)) {
-        touchHoldCustomizeTriggered_ = true;
-        lastTouchActionMs_ = now;
-        pageLeftMetric[page] = nextMetric(pageLeftMetric[page]);
-        showActivePage();
-        Serial.printf("[UI] page %u left metric -> %s (hold 5s)\n", page + 1, kMetricDefs[static_cast<uint8_t>(pageLeftMetric[page])].shortLabel);
-        return;
-      }
+      if (page != kTelemetryTestPageIndex) {
+        if (insideAt(leftCardButton, touchStartPoint_)) {
+          touchHoldCustomizeTriggered_ = true;
+          lastTouchActionMs_ = now;
+          pageLeftMetric[page] = nextMetric(pageLeftMetric[page]);
+          showActivePage();
+          Serial.printf("[UI] page %u left metric -> %s (hold 5s)\n", page + 1, kMetricDefs[static_cast<uint8_t>(pageLeftMetric[page])].shortLabel);
+          return;
+        }
 
-      if (insideAt(rightCardButton, touchStartPoint_)) {
-        touchHoldCustomizeTriggered_ = true;
-        lastTouchActionMs_ = now;
-        pageRightMetric[page] = nextMetric(pageRightMetric[page]);
-        showActivePage();
-        Serial.printf("[UI] page %u right metric -> %s (hold 5s)\n", page + 1, kMetricDefs[static_cast<uint8_t>(pageRightMetric[page])].shortLabel);
-        return;
+        if (insideAt(rightCardButton, touchStartPoint_)) {
+          touchHoldCustomizeTriggered_ = true;
+          lastTouchActionMs_ = now;
+          pageRightMetric[page] = nextMetric(pageRightMetric[page]);
+          showActivePage();
+          Serial.printf("[UI] page %u right metric -> %s (hold 5s)\n", page + 1, kMetricDefs[static_cast<uint8_t>(pageRightMetric[page])].shortLabel);
+          return;
+        }
       }
     }
   }
