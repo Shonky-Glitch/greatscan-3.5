@@ -1,0 +1,257 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build G-Scan Interface",
+			"type": "shell",
+			"command": "C:\\Users\\hayle\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--environment",
+				"esp32-s3-ui"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Upload G-Scan Interface",
+			"type": "shell",
+			"command": "C:\\Users\\hayle\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--environment",
+				"esp32-s3-ui",
+				"--target",
+				"upload"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Upload G-Scan Interface COM9",
+			"type": "shell",
+			"command": "C:\\Users\\hayle\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--environment",
+				"esp32-s3-ui",
+				"--target",
+				"upload",
+				"--upload-port",
+				"COM9"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Monitor G-Scan Interface COM9",
+			"type": "shell",
+			"command": "C:\\Users\\hayle\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"device",
+				"monitor",
+				"--environment",
+				"esp32-s3-ui",
+				"--port",
+				"COM9",
+				"--baud",
+				"115200"
+			],
+			"isBackground": true
+		},
+		{
+			"label": "Build CAN-X2 Scanner",
+			"type": "shell",
+			"command": "C:\\Users\\hayle\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--environment",
+				"esp32-can-x2"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Upload CAN-X2 Scanner COM8",
+			"type": "shell",
+			"command": "C:\\Users\\hayle\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"run",
+				"--environment",
+				"esp32-can-x2",
+				"--target",
+				"upload",
+				"--upload-port",
+				"COM8"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Monitor CAN-X2 Scanner COM8",
+			"type": "shell",
+			"command": "C:\\Users\\hayle\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"device",
+				"monitor",
+				"--environment",
+				"esp32-can-x2",
+				"--port",
+				"COM8",
+				"--baud",
+				"115200"
+			],
+			"isBackground": true
+		},
+		{
+			"label": "List Serial Ports",
+			"type": "shell",
+			"command": "C:\\Users\\hayle\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"device",
+				"list"
+			]
+		},
+		{
+			"label": "Test G-Scan Interface (Native)",
+			"type": "shell",
+			"command": "C:\\Users\\hayle\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"test",
+				"--environment",
+				"native"
+			],
+			"group": "test"
+		},
+		{
+			"label": "Test G-Scan Interface (ESP32 - CAUTION: overwrites board firmware)",
+			"type": "shell",
+			"command": "C:\\Users\\hayle\\.platformio\\penv\\Scripts\\platformio.exe",
+			"args": [
+				"test",
+				"--environment",
+				"esp32-s3-ui",
+				"--upload-port",
+				"${input:hardwareTestPort}",
+				"--test-port",
+				"${input:hardwareTestPort}"
+			],
+			"group": "test",
+			"detail": "WARNING: this replaces the running firmware on the target board with a Unity test binary (no UI/display code). Never point this at COM9 (Waveshare ESP32-S3 Touch UI board) or COM8 (Autosport Labs ESP32-CAN-X2 scanner board) unless you intend to overwrite them and reflash the real firmware afterward."
+		},
+		{
+			"label": "Kill PlatformIO Serial Holders",
+			"type": "shell",
+			"command": "taskkill",
+			"args": [
+				"/F",
+				"/IM",
+				"platformio.exe",
+				"/IM",
+				"python.exe",
+				"/T"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Kill PlatformIO Holders (UI Project)",
+			"type": "shell",
+			"command": "taskkill",
+			"args": [
+				"/F",
+				"/IM",
+				"platformio.exe",
+				"/IM",
+				"python.exe",
+				"/T"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Kill PlatformIO Holders (UI Project 2)",
+			"type": "shell",
+			"command": "taskkill",
+			"args": [
+				"/F",
+				"/IM",
+				"platformio.exe",
+				"/IM",
+				"python.exe",
+				"/T"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Kill PlatformIO Holders (UI Text Pass)",
+			"type": "shell",
+			"command": "taskkill",
+			"args": [
+				"/F",
+				"/IM",
+				"platformio.exe",
+				"/IM",
+				"python.exe",
+				"/T"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Kill PlatformIO Holders (Font Flags)",
+			"type": "shell",
+			"command": "taskkill",
+			"args": [
+				"/F",
+				"/IM",
+				"platformio.exe",
+				"/IM",
+				"python.exe",
+				"/T"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Kill PlatformIO Holders (Bitmap Text)",
+			"type": "shell",
+			"command": "taskkill",
+			"args": [
+				"/F",
+				"/IM",
+				"platformio.exe",
+				"/IM",
+				"python.exe",
+				"/T"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Kill PlatformIO Holders (Seg Digits)",
+			"type": "shell",
+			"command": "taskkill",
+			"args": [
+				"/F",
+				"/IM",
+				"platformio.exe",
+				"/IM",
+				"python.exe",
+				"/T"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Kill PlatformIO Holders (Dual Backend)",
+			"type": "shell",
+			"command": "taskkill",
+			"args": [
+				"/F",
+				"/IM",
+				"platformio.exe",
+				"/IM",
+				"python.exe",
+				"/T"
+			],
+			"isBackground": false
+		}
+	],
+	"inputs": [
+		{
+			"id": "hardwareTestPort",
+			"type": "promptString",
+			"description": "Type the exact COM port to run hardware Unity tests on. This OVERWRITES the firmware on that board with a test binary (no display/UI). Do not enter COM9 (Waveshare ESP32-S3 Touch UI board) or COM8 (Autosport Labs ESP32-CAN-X2 scanner board) unless you intend to reflash the real firmware afterward."
+		}
+	]
+}
